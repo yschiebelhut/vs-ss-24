@@ -2,29 +2,43 @@ package productservice.handler;
 
 import org.springframework.stereotype.Service;
 import productservice.model.Product;
+import productservice.model.ProductDAO;
 
 import java.util.List;
 
 @Service
 public class ProductHandler {
+    private ProductDAO productDAO;
 
-    public List<Product> getAllProducts() {
-        // Todo: Implement
-        return null;
+    public ProductHandler() {
+        productDAO = new ProductDAO();
     }
 
-    public Boolean addProduct(Product product) {
-        // Todo: Implement
-        return true;
+    public List<Product> getAllProducts() {
+        return productDAO.getObjectList();
+    }
+
+    public Integer addProduct(Product product) {
+        Product newProduct = new Product(product);
+        productDAO.saveObject(newProduct);
+        return product.getId();
     }
 
     public Boolean deleteProduct(Integer id) {
-        // Todo: Implement
+        productDAO.deleteById(id);
         return true;
     }
 
-    public Product getSpecificProduct(Integer id) {
-        // Todo: Implement
-        return new Product();
+    public Product getProductById(Integer id) {
+        return productDAO.getObjectById(id);
+    }
+
+    public Product getProductByName(String name) {
+        return productDAO.getObjectByName(name);
+    }
+
+    public List<Product> getProductsForSearchValues(String searchDescription,
+                                                    Double searchMinPrice, Double searchMaxPrice) {
+        return new ProductDAO().getProductListByCriteria(searchDescription, searchMinPrice, searchMaxPrice);
     }
 }

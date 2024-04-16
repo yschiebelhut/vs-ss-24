@@ -1,6 +1,5 @@
 package productservice.controller;
 
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +23,21 @@ public class ProductController {
 
     @GetMapping(value = "get-product/{id}")
     public ResponseEntity<Product> getSpecificProduct(@PathVariable Integer id) {
-        return new ResponseEntity<>(productHandler.getSpecificProduct(id), HttpStatus.OK);
+        return new ResponseEntity<>(productHandler.getProductById(id), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "get-product-by-name/{name}")
+    public ResponseEntity<Product> getProductByName(@PathVariable String name) {
+        return new ResponseEntity<>(productHandler.getProductByName(name), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "get-product-by-search/{desc}/{minPrice}/{maxPrice}")
+    public ResponseEntity<List<Product>> getProductBySearch(@PathVariable String desc, @PathVariable Double minPrice, @PathVariable Double maxPrice) {
+        return new ResponseEntity<>(productHandler.getProductsForSearchValues(desc, minPrice, maxPrice), HttpStatus.OK);
     }
 
     @PostMapping(value = "add-product")
-    public ResponseEntity<Boolean> addProduct(@RequestBody Product product) {
+    public ResponseEntity<Integer> addProduct(@RequestBody Product product) {
         return new ResponseEntity<>(productHandler.addProduct(product), HttpStatus.OK);
     }
 
