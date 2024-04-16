@@ -1,7 +1,6 @@
 package productservice.model;
 
 import jakarta.persistence.*;
-import categoryservice.model.Category;
 
 /**
  * This class contains details about products.
@@ -26,10 +25,10 @@ public class Product implements java.io.Serializable {
 	@Column(name = "price")
 	private double price;
 
-	
-	@ManyToOne
-	@JoinColumn(name = "category_id")
-	private Category category;
+//
+//	@ManyToOne
+//	@JoinColumn(name = "category_id")
+//	private Category category;
 
 	@Column(name = "details")
 	private String details;
@@ -37,16 +36,14 @@ public class Product implements java.io.Serializable {
 	public Product() {
 	}
 
-	public Product(String name, double price, Category category) {
+	public Product(String name, double price) {
 		this.name = name;
 		this.price = price;
-		this.category = category;
 	}
 
-	public Product(String name, double price, Category category, String details) {
+	public Product(String name, double price, String details) {
 		this.name = name;
 		this.price = price;
-		this.category = category;
 		this.details = details;
 	}
 
@@ -72,14 +69,6 @@ public class Product implements java.io.Serializable {
 
 	public void setPrice(double price) {
 		this.price = price;
-	}
-
-	public Category getCategory() {
-		return this.category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
 	}
 
 	public String getDetails() {
