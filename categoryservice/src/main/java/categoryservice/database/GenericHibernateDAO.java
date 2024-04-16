@@ -1,4 +1,4 @@
-package hska.iwi.eShopMaster.model.database;
+package categoryservice.database;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -13,9 +13,8 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import hska.iwi.eShopMaster.model.database.dataAccessObjects.IGenericDAO;
-import hska.iwi.eShopMaster.model.sessionFactory.util.HibernateUtil;
-
+import categoryservice.sessionFactory.util.HibernateUtil;
+import categoryservice.database.dataAccessObjects.IGenericDAO;
 
 public  class GenericHibernateDAO<E, PK extends Serializable> implements IGenericDAO<E, PK> {
 

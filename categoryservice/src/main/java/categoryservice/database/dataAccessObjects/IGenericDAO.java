@@ -1,4 +1,4 @@
-package hska.iwi.eShopMaster.model.database.dataAccessObjects;
+package categoryservice.database.dataAccessObjects;
 
 import java.io.Serializable;
 import java.util.Collection;

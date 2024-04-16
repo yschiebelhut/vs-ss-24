@@ -1,7 +1,7 @@
 package categoryservice.controller;
 
 import categoryservice.handler.CategoryHandler;
-import categoryservice.model.Category;
+import categoryservice.database.dataobjects.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -18,6 +18,16 @@ public class CategoryController {
     @Autowired
     private CategoryHandler categoryHandler;
 
+    @GetMapping(value = "get-category/{id}")
+    public ResponseEntity<Category> getCategory(@PathVariable int id) {
+        return new ResponseEntity<>(categoryHandler.getCategory(id), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "get-category/{name}")
+    public ResponseEntity<Category> getCategory(@PathVariable String name) {
+        return new ResponseEntity<>(categoryHandler.getCategoryByName(name), HttpStatus.OK);
+    }
+
     @GetMapping(value = "get-categories")
     public ResponseEntity<List<Category>> getAllCategories() {
         return new ResponseEntity<>(categoryHandler.getAllCategories(), HttpStatus.OK);
@@ -28,8 +38,13 @@ public class CategoryController {
         return new ResponseEntity<>(categoryHandler.addCategory(category), HttpStatus.OK);
     }
 
+    @DeleteMapping(value = "delete-category/{cat}")
+    public ResponseEntity<Boolean> deleteCategory(@PathVariable Category cat) {
+        return new ResponseEntity<>(categoryHandler.delCategory(cat), HttpStatus.OK);
+    }
+
     @DeleteMapping(value = "delete-category/{id}")
     public ResponseEntity<Boolean> deleteCategory(@PathVariable Integer id) {
-        return new ResponseEntity<>(categoryHandler.deleteCategory(id), HttpStatus.OK);
+        return new ResponseEntity<>(categoryHandler.deleteCategoryById(id), HttpStatus.OK);
     }
 }

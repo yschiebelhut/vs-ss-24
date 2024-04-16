@@ -1,7 +1,7 @@
-package hska.iwi.eShopMaster.model.database.dataAccessObjects;
+package categoryservice.database.dataAccessObjects;
 
-import hska.iwi.eShopMaster.model.database.GenericHibernateDAO;
-import hska.iwi.eShopMaster.model.database.dataobjects.Category;
+import categoryservice.database.dataobjects.Category;
+import categoryservice.database.GenericHibernateDAO;
 
 public class CategoryDAO extends GenericHibernateDAO<Category, Integer> {
 

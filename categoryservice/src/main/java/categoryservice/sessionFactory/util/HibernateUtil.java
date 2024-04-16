@@ -1,4 +1,4 @@
-package hska.iwi.eShopMaster.model.sessionFactory.util;
+package categoryservice.sessionFactory.util;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
