@@ -1,4 +1,4 @@
-package hska.iwi.eShopMaster.model.database.dataobjects;
+package categoryservice.database.dataobjects;
 
 
 import java.util.HashSet;
