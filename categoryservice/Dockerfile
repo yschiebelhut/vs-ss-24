@@ -2,6 +2,11 @@
 FROM eclipse-temurin:17-jdk-alpine AS build
 WORKDIR /build
 
+# Install dependencies in a separate step, to be cacheable
+COPY ./pom.xml /build
+COPY ./mvnw /build
+COPY ./.mvn/ /build/.mvn/
+RUN ./mvnw verify clean --fail-never # yes, this will always fail :/
 
 # Make sourcecode available in build container
 COPY . /build
