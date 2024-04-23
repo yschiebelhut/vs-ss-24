@@ -5,11 +5,14 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import org.hibernate.Criteria;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 
 public  class GenericHibernateDAO<E, PK extends Serializable> implements IGenericDAO<E, PK> {
@@ -79,7 +82,7 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 
 		
 		@SuppressWarnings("unchecked")
-		public E getObjectByName(String name) {
+		/* public E getObjectByName(String name) {
 		    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 			try
 			{
@@ -99,6 +102,29 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 				//log.error("Hibernate Exception" + e.getMessage());
 				session.getTransaction().rollback();
 				throw new RuntimeException(e);
+			}
+		} */
+		public E getObjectByName(String name) {
+			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+			try (Session session = sessionFactory.getCurrentSession()) {
+				session.beginTransaction();
+
+				CriteriaBuilder builder = session.getCriteriaBuilder();
+				CriteriaQuery<E> query = builder.createQuery(entityClass);
+				Root<E> root = query.from(entityClass);
+				query.select(root).where(builder.equal(root.get("name"), name));
+
+				List<E> resultList = session.createQuery(query).getResultList();
+				E entity = null;
+				if (!resultList.isEmpty()) {
+					entity = resultList.get(0);
+				}
+
+				session.getTransaction().commit();
+				return entity;
+			} catch (HibernateException e) {
+				// Log your exception or handle it appropriately
+				throw new RuntimeException("Hibernate Exception", e);
 			}
 		}
 	
@@ -144,7 +170,7 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 
 
 		@SuppressWarnings("unchecked")
-		public List<E> get(E entity) {
+	/*	public List<E> get(E entity) {
 		    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 		    try
 		    {
@@ -162,61 +188,129 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 				session.getTransaction().rollback();
 				throw new RuntimeException(e);
 			}
+		}*/
+
+		public List<E> get(E entity) {
+			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+			try (Session session = sessionFactory.getCurrentSession()) {
+				session.beginTransaction();
+
+				CriteriaBuilder builder = session.getCriteriaBuilder();
+				CriteriaQuery<E> query = builder.createQuery(entityClass);
+				Root<E> root = query.from(entityClass);
+				query.select(root).where(builder.equal(root, entity));
+
+				Query<E> q = session.createQuery(query);
+				List<E> resultList = q.getResultList();
+
+				session.getTransaction().commit();
+				return resultList;
+			} catch (HibernateException e) {
+				// Log your exception or handle it appropriately
+				throw new RuntimeException("Hibernate Exception", e);
+			}
 		}
 
 		
 		@SuppressWarnings("unchecked")
+//		public List<E> getObjectList() {
+//		    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+//
+//			try
+//			{
+//				session.beginTransaction();
+//
+//				Criteria crit = session.createCriteria(entityClass);
+//	            List<E> resultList = crit.list();
+//	            session.getTransaction().commit();
+//				return resultList;
+//			}
+//			catch (HibernateException e)
+//			{
+//				//log.error("Hibernate Exception" + e.getMessage());
+//				session.getTransaction().rollback();
+//				throw new RuntimeException(e);
+//			}
+//
+//		}
 		public List<E> getObjectList() {
-		    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-		    
-			try
-			{		
+			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+			try (Session session = sessionFactory.getCurrentSession()) {
 				session.beginTransaction();
-				
-				Criteria crit = session.createCriteria(entityClass);
-	            List<E> resultList = crit.list();
-	            session.getTransaction().commit();
-				return resultList;
-			}
-			catch (HibernateException e)
-			{
-				//log.error("Hibernate Exception" + e.getMessage());
-				session.getTransaction().rollback();
-				throw new RuntimeException(e);
-			}
 
+				CriteriaBuilder builder = session.getCriteriaBuilder();
+				CriteriaQuery<E> query = builder.createQuery(entityClass);
+				Root<E> root = query.from(entityClass);
+				query.select(root);
+
+				List<E> resultList = session.createQuery(query).getResultList();
+
+				session.getTransaction().commit();
+				return resultList;
+			} catch (HibernateException e) {
+				// Log your exception or handle it appropriately
+				throw new RuntimeException("Hibernate Exception", e);
+			}
 		}
 
 
 		
 		@SuppressWarnings("unchecked")
-		public List<E> getSortedList(String sortOrder, String sortProperty) {
-		    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-		    
-			try
-			{		
-				session.beginTransaction();
-				
-				Criteria crit = session.createCriteria(entityClass);
-				if (!sortProperty.equals("")){
-					if (sortOrder.equals("asc")){
-					crit.addOrder(Order.asc(sortProperty));
-					}
-					else if (sortOrder.equals("desc")){
-						crit.addOrder(Order.desc(sortProperty));
-						}
-				}
-	            List<E> resultList = crit.list();
-	            session.getTransaction().commit();
-				return resultList;
-			}
-			catch (HibernateException e)
-			{
-				//log.error("Hibernate Exception" + e.getMessage());
-				session.getTransaction().rollback();
-				throw new RuntimeException(e);
-			}
+//		public List<E> getSortedList(String sortOrder, String sortProperty) {
+//		    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+//
+//			try
+//			{
+//				session.beginTransaction();
+//
+//				Criteria crit = session.createCriteria(entityClass);
+//				if (!sortProperty.equals("")){
+//					if (sortOrder.equals("asc")){
+//					crit.addOrder(Order.asc(sortProperty));
+//					}
+//					else if (sortOrder.equals("desc")){
+//						crit.addOrder(Order.desc(sortProperty));
+//						}
+//				}
+//	            List<E> resultList = crit.list();
+//	            session.getTransaction().commit();
+//				return resultList;
+//			}
+//			catch (HibernateException e)
+//			{
+//				//log.error("Hibernate Exception" + e.getMessage());
+//				session.getTransaction().rollback();
+//				throw new RuntimeException(e);
+//			}
+//
+//		}
 
+		public List<E> getSortedList(String sortOrder, String sortProperty) {
+			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+			try (Session session = sessionFactory.getCurrentSession()) {
+				session.beginTransaction();
+
+				CriteriaBuilder builder = session.getCriteriaBuilder();
+				CriteriaQuery<E> query = builder.createQuery(entityClass);
+				Root<E> root = query.from(entityClass);
+				query.select(root);
+
+				if (!sortProperty.isEmpty()) {
+					if (sortOrder.equals("asc")) {
+						query.orderBy(builder.asc(root.get(sortProperty)));
+					} else if (sortOrder.equals("desc")) {
+						query.orderBy(builder.desc(root.get(sortProperty)));
+					}
+				}
+
+				List<E> resultList = session.createQuery(query).getResultList();
+
+				session.getTransaction().commit();
+				return resultList;
+			} catch (HibernateException e) {
+				// Log your exception or handle it appropriately
+				throw new RuntimeException("Hibernate Exception", e);
+			}
 		}
 
 		public void updateObject(E entity) {

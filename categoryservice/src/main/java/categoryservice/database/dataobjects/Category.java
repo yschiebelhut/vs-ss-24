@@ -1,8 +1,5 @@
 package categoryservice.database.dataobjects;
 
-
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.*;
 
 /**

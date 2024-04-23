@@ -1,7 +1,7 @@
 package productservice.model;
 
+import jakarta.persistence.*;
 
-import javax.persistence.*;
 
 /**
  * This class contains details about products.
@@ -52,6 +52,10 @@ public class Product implements java.io.Serializable {
 		this.price = price;
 		this.categoryId = category;
 		this.details = details;
+	}
+
+	public Product() {
+
 	}
 
 	public int getId() {
