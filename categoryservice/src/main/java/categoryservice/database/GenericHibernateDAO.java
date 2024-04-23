@@ -8,15 +8,10 @@ import java.util.List;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
-import org.apache.logging.log4j.*;
-//import org.apache.logging.log4j.Logger;
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 
 import categoryservice.sessionFactory.util.HibernateUtil;
 import categoryservice.database.dataAccessObjects.IGenericDAO;
