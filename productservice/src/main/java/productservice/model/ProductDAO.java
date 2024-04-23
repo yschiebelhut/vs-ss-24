@@ -16,8 +16,7 @@ public class ProductDAO extends GenericHibernateDAO<Product, Integer> {
 		Transaction transaction = null;
 		List<Product> productList = null;
 
-	    try {
-			transaction = session.beginTransaction();
+	    try {			transaction = session.beginTransaction();
 			Criteria crit = session.createCriteria(Product.class);
 			
 			// Define Search HQL:
