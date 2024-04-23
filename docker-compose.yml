@@ -3,5 +3,12 @@ services:
   productservice:
     build: ./productservice/
 
+  productservice-db:
+    build: ./productservice/database/
+
   categoryservice:
     build: ./categoryservice/
+
+  categoryservice-db:
+    build: ./categoryservice/database/
+

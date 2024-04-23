@@ -1,0 +1,1 @@
+# Initializes the Database with all necessary tables
