@@ -7,5 +7,3 @@ CREATE TABLE category
     name VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB;
-
-CREATE INDEX FK1mtsbur82frn64de7balymq9s ON product (category_id ASC);
