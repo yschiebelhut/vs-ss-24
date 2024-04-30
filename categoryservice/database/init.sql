@@ -1,6 +1,3 @@
-#
-Initializes the Database with all necessary tables
-
 CREATE TABLE category
 (
     id   INT          NOT NULL AUTO_INCREMENT,

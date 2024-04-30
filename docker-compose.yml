@@ -29,10 +29,6 @@ services:
       local_dev_net:
           aliases:
               - categoryservice
-    networks:
-      local_dev_net:
-          aliases:
-              - categoryservice
 
   categoryservice-db:
     build: ./categoryservice/database/
