@@ -1,6 +1,6 @@
 package categoryservice.database.dataobjects;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * This class contains details about categories.
