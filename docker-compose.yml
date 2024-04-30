@@ -2,6 +2,8 @@ version: "3"
 services:
   productservice:
     build: ./productservice/
+    ports:
+    - "127.0.0.1:3002:8080"
     networks:
       local_dev_net:
           aliases:
@@ -17,7 +19,7 @@ services:
       MYSQL_USER: productservice
       MYSQL_PASSWORD: 240b2c6d58ff2ce2f508b49f
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     networks:
         local_dev_net:
             aliases:
@@ -25,6 +27,8 @@ services:
 
   categoryservice:
     build: ./categoryservice/
+    ports:
+    - "127.0.0.1:3001:8080"
     networks:
       local_dev_net:
           aliases:
@@ -40,7 +44,7 @@ services:
       MYSQL_USER: categoryservice
       MYSQL_PASSWORD: 240b2c6d58ff2ce2f508b49f
     ports:
-      - "3307:3306"
+      - "127.0.0.2:3306:3306"
     networks:
         local_dev_net:
             aliases:
