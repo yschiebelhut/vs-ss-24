@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public class CategoryHandler {
 
-    private final CategoryDAO helper;
+    private CategoryDAO helper;
 
     public CategoryHandler() {
         helper = new CategoryDAO();
@@ -19,7 +19,7 @@ public class CategoryHandler {
         return helper.getObjectList();
     }
 
-    public Category getCategory(int id) {
+    public Category getCategory(Integer id) {
         return helper.getObjectById(id);
     }
 

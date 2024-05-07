@@ -19,7 +19,7 @@ public class CategoryController {
     private CategoryHandler categoryHandler;
 
     @GetMapping(value = "get-category/{id}")
-    public ResponseEntity<Category> getCategory(@PathVariable int id) {
+    public ResponseEntity<Category> getCategory(@PathVariable Integer id) {
         return new ResponseEntity<>(categoryHandler.getCategory(id), HttpStatus.OK);
     }
 
@@ -38,10 +38,10 @@ public class CategoryController {
         return new ResponseEntity<>(categoryHandler.addCategory(category), HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "delete-category/{cat}")
-    public ResponseEntity<Boolean> deleteCategory(@PathVariable Category cat) {
-        return new ResponseEntity<>(categoryHandler.delCategory(cat), HttpStatus.OK);
-    }
+//    @DeleteMapping(value = "delete-category/{cat}")
+//    public ResponseEntity<Boolean> deleteCategory(@PathVariable Category cat) {
+//        return new ResponseEntity<>(categoryHandler.delCategory(cat), HttpStatus.OK);
+//    }
 
     @DeleteMapping(value = "delete-category/{id}")
     public ResponseEntity<Boolean> deleteCategory(@PathVariable Integer id) {
