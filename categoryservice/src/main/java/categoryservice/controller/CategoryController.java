@@ -44,7 +44,7 @@ public class CategoryController {
 //    }
 
     @DeleteMapping(value = "delete-category/{id}")
-    public ResponseEntity<Boolean> deleteCategory(@PathVariable Integer id) {
+    public ResponseEntity<Boolean> deleteCategoryById(@PathVariable Integer id) {
         return new ResponseEntity<>(categoryHandler.deleteCategoryById(id), HttpStatus.OK);
     }
 }
