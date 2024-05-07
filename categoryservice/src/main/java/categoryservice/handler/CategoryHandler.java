@@ -3,6 +3,7 @@ package categoryservice.handler;
 import categoryservice.database.dataAccessObjects.CategoryDAO;
 import categoryservice.database.dataobjects.Category;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
@@ -11,8 +12,11 @@ public class CategoryHandler {
 
     private CategoryDAO helper;
 
-    public CategoryHandler() {
+    private final WebClient webClient;
+
+    public CategoryHandler(WebClient webClient) {
         helper = new CategoryDAO();
+        this.webClient = webClient;
     }
 
     public List<Category> getAllCategories() {
@@ -40,7 +44,24 @@ public class CategoryHandler {
     }
 
     public Boolean deleteCategoryById(Integer id) {
-        helper.deleteById(id);
-        return true;
+
+        // Todo: Product delete mit den Kategorien
+        if (deleteProductsByCategory(id)) {
+            helper.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    private Boolean deleteProductsByCategory(Integer categoryId) {
+        try {
+            webClient.delete()
+                    .uri("/delete-product-by-category/"+categoryId)
+                    .retrieve();
+            return true;
+        } catch(Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

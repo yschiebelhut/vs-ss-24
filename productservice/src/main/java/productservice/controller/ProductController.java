@@ -45,4 +45,9 @@ public class ProductController {
     public ResponseEntity<Boolean> deleteProduct(@PathVariable Integer id) {
         return new ResponseEntity<>(productHandler.deleteProduct(id), HttpStatus.OK);
     }
+
+    @DeleteMapping(value = "delete-product-by-category/{id}")
+    public ResponseEntity<Boolean> deleteProductByCategory(@PathVariable Integer id) {
+        return new ResponseEntity<>(productHandler.deleteProductByCategory(id), HttpStatus.OK);
+    }
 }
