@@ -23,10 +23,10 @@ public class CategoryController {
         return new ResponseEntity<>(categoryHandler.getCategory(id), HttpStatus.OK);
     }
 
-    @GetMapping(value = "get-category/{name}")
-    public ResponseEntity<Category> getCategory(@PathVariable String name) {
-        return new ResponseEntity<>(categoryHandler.getCategoryByName(name), HttpStatus.OK);
-    }
+//    @GetMapping(value = "get-category/{name}")
+//    public ResponseEntity<Category> getCategory(@PathVariable String name) {
+//        return new ResponseEntity<>(categoryHandler.getCategoryByName(name), HttpStatus.OK);
+//    }
 
     @GetMapping(value = "get-categories")
     public ResponseEntity<List<Category>> getAllCategories() {
