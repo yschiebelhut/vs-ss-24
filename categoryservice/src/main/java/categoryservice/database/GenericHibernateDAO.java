@@ -13,7 +13,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import categoryservice.sessionFactory.util.HibernateUtil;
 import categoryservice.database.dataAccessObjects.IGenericDAO;
 import org.hibernate.query.Query;
 

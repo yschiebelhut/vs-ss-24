@@ -54,8 +54,8 @@ public class ProductDAO extends GenericHibernateDAO<Product, Integer> {
 	public List<Product> getProductListByCriteria(String searchDescription, Double searchMinPrice, Double searchMaxPrice) {
 		List<Product> productList = new ArrayList<>();
 
-		try (Session session = HibernateUtil.getSessionFactory().getCurrentSession();) {
-			session.beginTransaction();
+		Session session = getSession();
+        session.beginTransaction();
 
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<Product> query = builder.createQuery(Product.class);
@@ -77,9 +77,6 @@ public class ProductDAO extends GenericHibernateDAO<Product, Integer> {
 			productList = q.getResultList();
 
 			session.getTransaction().commit();
-		} catch (HibernateException e) {
-			throw new RuntimeException("Hibernate Exception", e);
-		}
 
 		return productList;
 	}
