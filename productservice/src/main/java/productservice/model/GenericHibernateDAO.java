@@ -23,9 +23,21 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 	 */
 	protected Class<E> entityClass;
 	 
-//	private static Logger log = Logger.class(GenericHibernateDAO.class);
- //   private static final Logger log = LogManager.getLogger("GenericHibernateDAO");
+    Session getSession() {
+            Configuration config = new Configuration();
+    
+            config.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
+            config.setProperty("hibernate.connection.url", "jdbc:mysql://" + System.getenv("DB_PATH"));
+            config.setProperty("hibernate.connection.username", System.getenv("DB_USER"));
+            config.setProperty("hibernate.connection.password", System.getenv("DB_PASS"));
+            config.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
 
+            config.addAnnotatedClass(entityClass);
+
+            SessionFactory sessionFactory = config.buildSessionFactory();  
+            Session session = sessionFactory.openSession();
+            return session;
+    }
 	
 		@SuppressWarnings("unchecked")
 		protected GenericHibernateDAO() {
@@ -52,7 +64,7 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 		}
 	 
 		public void saveObject(E entity) { 		
-		    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		    Session session = getSession();
 	 		try
 			{
 				session.beginTransaction();
@@ -71,7 +83,7 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 		@SuppressWarnings("unchecked")
 		public E getObjectById(PK id) {
 					
-		    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		    Session session = getSession();
 		    
 		    session.beginTransaction();
 
@@ -81,33 +93,9 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 		}
 
 		
-		@SuppressWarnings("unchecked")
-		/* public E getObjectByName(String name) {
-		    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-			try
-			{
-				E entity = null;
-				session.beginTransaction();
-	            Criteria crit = session.createCriteria(entityClass);
-	            crit.add(Restrictions.eq("name",name));
-	            List<E> resultList = crit.list();
-	            if (resultList.size() > 0) {
-	            	entity = (E) crit.list().get(0);
-	            }
-	            session.getTransaction().commit();
-	            return entity;
-			}
-			catch (HibernateException e)
-			{
-				//log.error("Hibernate Exception" + e.getMessage());
-				session.getTransaction().rollback();
-				throw new RuntimeException(e);
-			}
-		} */
 		public E getObjectByName(String name) {
-			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-			try (Session session = sessionFactory.getCurrentSession()) {
-				session.beginTransaction();
+			Session session = getSession();
+            session.beginTransaction();
 
 				CriteriaBuilder builder = session.getCriteriaBuilder();
 				CriteriaQuery<E> query = builder.createQuery(entityClass);
@@ -122,15 +110,11 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 
 				session.getTransaction().commit();
 				return entity;
-			} catch (HibernateException e) {
-				// Log your exception or handle it appropriately
-				throw new RuntimeException("Hibernate Exception", e);
-			}
 		}
 	
 
 		public void deleteObject(E entity) {
-		    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		    Session session = getSession();
 
 			try
 			{
@@ -149,7 +133,7 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 	 
 		
 		public void deleteById(PK id) {
-			    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+			    Session session = getSession();
 
 				try
 				{
@@ -168,32 +152,9 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 			
 		}
 
-
-		@SuppressWarnings("unchecked")
-	/*	public List<E> get(E entity) {
-		    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-		    try
-		    {
-		    
-		    session.beginTransaction();
-		    Criteria crit = session.createCriteria(entityClass);
-		    crit.add(Restrictions.idEq(entity));
-		    List <E> resultList = crit.list();
-		    session.getTransaction().commit();
-			return resultList;
-		    }
-			catch (HibernateException e)
-			{
-				//log.error("Hibernate Exception" + e.getMessage());
-				session.getTransaction().rollback();
-				throw new RuntimeException(e);
-			}
-		}*/
-
 		public List<E> get(E entity) {
-			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-			try (Session session = sessionFactory.getCurrentSession()) {
-				session.beginTransaction();
+				Session session = getSession();
+                session.beginTransaction();
 
 				CriteriaBuilder builder = session.getCriteriaBuilder();
 				CriteriaQuery<E> query = builder.createQuery(entityClass);
@@ -205,38 +166,12 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 
 				session.getTransaction().commit();
 				return resultList;
-			} catch (HibernateException e) {
-				// Log your exception or handle it appropriately
-				throw new RuntimeException("Hibernate Exception", e);
-			}
 		}
 
 		
-		@SuppressWarnings("unchecked")
-//		public List<E> getObjectList() {
-//		    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-//
-//			try
-//			{
-//				session.beginTransaction();
-//
-//				Criteria crit = session.createCriteria(entityClass);
-//	            List<E> resultList = crit.list();
-//	            session.getTransaction().commit();
-//				return resultList;
-//			}
-//			catch (HibernateException e)
-//			{
-//				//log.error("Hibernate Exception" + e.getMessage());
-//				session.getTransaction().rollback();
-//				throw new RuntimeException(e);
-//			}
-//
-//		}
 		public List<E> getObjectList() {
-			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-			try (Session session = sessionFactory.getCurrentSession()) {
-				session.beginTransaction();
+			Session session = getSession();
+            session.beginTransaction();
 
 				CriteriaBuilder builder = session.getCriteriaBuilder();
 				CriteriaQuery<E> query = builder.createQuery(entityClass);
@@ -247,48 +182,14 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 
 				session.getTransaction().commit();
 				return resultList;
-			} catch (HibernateException e) {
-				// Log your exception or handle it appropriately
-				throw new RuntimeException("Hibernate Exception", e);
-			}
 		}
 
 
 		
-		@SuppressWarnings("unchecked")
-//		public List<E> getSortedList(String sortOrder, String sortProperty) {
-//		    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-//
-//			try
-//			{
-//				session.beginTransaction();
-//
-//				Criteria crit = session.createCriteria(entityClass);
-//				if (!sortProperty.equals("")){
-//					if (sortOrder.equals("asc")){
-//					crit.addOrder(Order.asc(sortProperty));
-//					}
-//					else if (sortOrder.equals("desc")){
-//						crit.addOrder(Order.desc(sortProperty));
-//						}
-//				}
-//	            List<E> resultList = crit.list();
-//	            session.getTransaction().commit();
-//				return resultList;
-//			}
-//			catch (HibernateException e)
-//			{
-//				//log.error("Hibernate Exception" + e.getMessage());
-//				session.getTransaction().rollback();
-//				throw new RuntimeException(e);
-//			}
-//
-//		}
 
 		public List<E> getSortedList(String sortOrder, String sortProperty) {
-			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-			try (Session session = sessionFactory.getCurrentSession()) {
-				session.beginTransaction();
+			Session session = getSession();
+            session.beginTransaction();
 
 				CriteriaBuilder builder = session.getCriteriaBuilder();
 				CriteriaQuery<E> query = builder.createQuery(entityClass);
@@ -307,15 +208,10 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 
 				session.getTransaction().commit();
 				return resultList;
-			} catch (HibernateException e) {
-				// Log your exception or handle it appropriately
-				throw new RuntimeException("Hibernate Exception", e);
-			}
 		}
 
 		public void updateObject(E entity) {
-		    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-
+            Session session = getSession();
 			try
 			{
 				session.beginTransaction();
@@ -329,7 +225,4 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 				throw new RuntimeException(e);
 			}
 		}
-
-
-
 }
