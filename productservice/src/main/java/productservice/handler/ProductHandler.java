@@ -62,10 +62,9 @@ public class ProductHandler {
 
     private Boolean validateCategory(Integer categoryId) {
         try {
-            webclient.get()
-                    .uri("/get-category/" + categoryId)
-                    .retrieve();
-            return true;
+            return webclient.get()
+                    .uri("/exists-category/" + categoryId)
+                    .retrieve().bodyToMono(Boolean.class).block();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;

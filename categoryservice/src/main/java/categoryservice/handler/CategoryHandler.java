@@ -55,10 +55,9 @@ public class CategoryHandler {
 
     private Boolean deleteProductsByCategory(Integer categoryId) {
         try {
-            webClient.delete()
+            return webClient.delete()
                     .uri("/delete-product-by-category/"+categoryId)
-                    .retrieve();
-            return true;
+                    .retrieve().bodyToMono(Boolean.class).block();
         } catch(Exception e) {
             e.printStackTrace();
             return false;

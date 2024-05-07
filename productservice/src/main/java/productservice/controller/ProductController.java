@@ -48,6 +48,7 @@ public class ProductController {
 
     @DeleteMapping(value = "delete-product-by-category/{id}")
     public ResponseEntity<Boolean> deleteProductByCategory(@PathVariable Integer id) {
+        System.out.println("Aufruf! Delete!");
         return new ResponseEntity<>(productHandler.deleteProductByCategory(id), HttpStatus.OK);
     }
 }
