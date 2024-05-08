@@ -6,16 +6,16 @@ WORKDIR /build
 COPY ./pom.xml /build
 COPY ./mvnw /build
 COPY ./.mvn/ /build/.mvn/
-RUN ./mvnw verify clean --fail-never # yes, this will always fail :/
+RUN ./mvnw dependency:go-offline
 
 # Make sourcecode available in build container
 COPY . /build
 # Run Maven Install
+# TODO: For some reason --offline does not work, seems we have dependencies that are pulled in during builld :/
 RUN ./mvnw install
 
 # Move resulting jars into /build/result
 RUN cd target && ls
-# RUN mkdir -p build/result && (cd build/result; jar -xf ../*.jar)
 
 
 # ---------- Run Stage --------------
@@ -25,7 +25,5 @@ FROM eclipse-temurin:17-jdk-alpine
 # Copy over executables from Build Stage
 COPY --from=build /build/target/productservice-0.0.1-SNAPSHOT.jar /app/app.jar
 COPY --from=build /build/target/classes/ /app/
-# COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
-# COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 
 ENTRYPOINT ["java","-jar","/app/app.jar"]
