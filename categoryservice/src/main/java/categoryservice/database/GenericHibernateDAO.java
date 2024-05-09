@@ -23,8 +23,14 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 	 * The class of the pojo being persisted.
 	 */
 	protected Class<E> entityClass;
-	 
+	
+    static Session sessionSingleton = null;
+
         Session getSession() {
+            if (sessionSingleton != null) {
+                return sessionSingleton;
+            }
+
             Configuration config = new Configuration();
     
             config.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
@@ -37,6 +43,9 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 
             SessionFactory sessionFactory = config.buildSessionFactory();  
             Session session = sessionFactory.openSession();
+
+            sessionSingleton = session;
+
             return session;
         }
 	

@@ -22,21 +22,30 @@ public  class GenericHibernateDAO<E, PK extends Serializable> implements IGeneri
 	 * The class of the pojo being persisted.
 	 */
 	protected Class<E> entityClass;
-	 
+	
+    static Session sessionSingleton = null;
+
     Session getSession() {
-            Configuration config = new Configuration();
+        if (sessionSingleton != null) {
+            return sessionSingleton;
+        }
+
+        Configuration config = new Configuration();
     
-            config.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-            config.setProperty("hibernate.connection.url", "jdbc:mysql://" + System.getenv("DB_PATH"));
-            config.setProperty("hibernate.connection.username", System.getenv("DB_USER"));
-            config.setProperty("hibernate.connection.password", System.getenv("DB_PASS"));
-            config.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        config.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
+        config.setProperty("hibernate.connection.url", "jdbc:mysql://" + System.getenv("DB_PATH"));
+        config.setProperty("hibernate.connection.username", System.getenv("DB_USER"));
+        config.setProperty("hibernate.connection.password", System.getenv("DB_PASS"));
+        config.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
 
-            config.addAnnotatedClass(entityClass);
+        config.addAnnotatedClass(entityClass);
 
-            SessionFactory sessionFactory = config.buildSessionFactory();  
-            Session session = sessionFactory.openSession();
-            return session;
+        SessionFactory sessionFactory = config.buildSessionFactory();  
+        Session session = sessionFactory.openSession();
+
+        sessionSingleton = session;
+
+        return session;
     }
 	
 		@SuppressWarnings("unchecked")
