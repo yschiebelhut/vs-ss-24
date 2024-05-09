@@ -14,43 +14,55 @@ public class CategoryHandler {
 
     private final WebClient webClient;
 
+    void log(String message) {
+        System.out.println("[CategoryHandler] " + message);
+    }
+
     public CategoryHandler(WebClient webClient) {
         helper = new CategoryDAO();
         this.webClient = webClient;
     }
 
     public List<Category> getAllCategories() {
+        log("Retrieving all categories");
         return helper.getObjectList();
     }
 
     public Category getCategory(Integer id) {
+        log("Retrieving category " + id);
         return helper.getObjectById(id);
     }
 
     public Category getCategoryByName(String name) {
+        log("Searching for category " + name);
         return helper.getObjectByName(name);
     }
 
     public Boolean addCategory(Category category) {
         Category cat = new Category(category.getName());
         helper.saveObject(cat);
+        log("Added Category " + category.getName());
         return true;
     }
 
     public Boolean delCategory(Category cat) {
-// 		Products are also deleted because of relation in Category.java
+        if (!deleteProductsByCategory(cat.getId())) {
+            return false;
+        }
+
         helper.deleteById(cat.getId());
+        log("Deleted Category" + cat.getName());
         return true;
     }
 
     public Boolean deleteCategoryById(Integer id) {
-
-        // Todo: Product delete mit den Kategorien
-        if (deleteProductsByCategory(id)) {
-            helper.deleteById(id);
-            return true;
+        if (!deleteProductsByCategory(id)) {
+            return false;
         }
-        return false;
+        
+        helper.deleteById(id);
+        log("Deleted Category " + id);
+        return true;
     }
 
     private Boolean deleteProductsByCategory(Integer categoryId) {
@@ -58,8 +70,10 @@ public class CategoryHandler {
             webClient.delete()
                     .uri("/delete-product-by-category/"+categoryId)
                     .retrieve();
+            log("Deleted all Products belonging to " + categoryId);
             return true;
         } catch(Exception e) {
+            log("Failed to delete all Products");
             e.printStackTrace();
             return false;
         }

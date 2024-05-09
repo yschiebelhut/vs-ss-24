@@ -12,12 +12,17 @@ public class ProductHandler {
     private ProductDAO productDAO;
     private final WebClient webclient;
 
+    void log(String message) {
+        System.out.println("[ProductHandler] " + message);
+    }
+
     public ProductHandler(WebClient webclient) {
         productDAO = new ProductDAO();
         this.webclient = webclient;
     }
 
     public List<Product> getAllProducts() {
+        log("Get all");
         return productDAO.getObjectList();
     }
 
@@ -26,6 +31,7 @@ public class ProductHandler {
         if (validateCategory(product.getCategory())) {
             Product newProduct = new Product(product);
             productDAO.saveObject(newProduct);
+            log("Added Product " + product.getName() + " with id " + product.getId());
             return product.getId();
         }
         return -1;
@@ -33,14 +39,17 @@ public class ProductHandler {
 
     public Boolean deleteProduct(Integer id) {
         productDAO.deleteById(id);
+        log("Deleted Product " + id);
         return true;
     }
 
     public Product getProductById(Integer id) {
+        log("Retrieving Product " + id);
         return productDAO.getObjectById(id);
     }
 
     public Product getProductByName(String name) {
+        log("Searching Product " + name);
         return productDAO.getObjectByName(name);
     }
 
@@ -50,10 +59,12 @@ public class ProductHandler {
     }
 
     public Boolean deleteProductByCategory(Integer categoryId) {
+        log("Deleting all Products with category " + categoryId);
         List<Product> allProducts = getAllProducts();
         for (Product product : allProducts) {
             if (product.getCategory() == categoryId) {
                 deleteProduct(product.getId());
+                log("Deleting Product " + product.getId());
             }
         }
 
@@ -65,8 +76,10 @@ public class ProductHandler {
             webclient.get()
                     .uri("/get-category/" + categoryId)
                     .retrieve();
+            log("Category " + categoryId + " is valid");
             return true;
         } catch (Exception e) {
+            log("Category " + categoryId + " is invalid");
             System.out.println(e.getMessage());
             return false;
         }
