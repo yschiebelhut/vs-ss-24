@@ -50,4 +50,9 @@ public class CategoryController {
     public ResponseEntity<Boolean> deleteCategoryById(@PathVariable Integer id) {
         return new ResponseEntity<>(categoryHandler.deleteCategoryById(id), HttpStatus.OK);
     }
+
+    @GetMapping(value = "exists-category/{id}")
+    public ResponseEntity<Boolean> existsCategory(@PathVariable Integer id) {
+        return new ResponseEntity<>(categoryHandler.getCategory(id) != null, HttpStatus.OK);
+    }
 }
