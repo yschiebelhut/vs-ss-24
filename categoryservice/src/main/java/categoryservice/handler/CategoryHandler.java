@@ -67,7 +67,7 @@ public class CategoryHandler {
 
     private Boolean deleteProductsByCategory(Integer categoryId) {
         try {
-            bool success = webClient.delete()
+            Boolean success = webClient.delete()
                     .uri("/delete-product-by-category/"+categoryId)
                     .retrieve().bodyToMono(Boolean.class).block();
             log("Deleted all Products belonging to " + categoryId + " success: " + success);
