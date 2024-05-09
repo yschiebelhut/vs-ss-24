@@ -2,6 +2,8 @@ package productservice.model;
 
 import jakarta.persistence.*;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Min;
 
 /**
  * This class contains details about products.
@@ -21,14 +23,16 @@ public class Product implements java.io.Serializable {
 	private int id;
 
 	@Column(name = "name")
+    @NotBlank
 	private String name;
 
 	@Column(name = "price")
+    @Min(0)
 	private double price;
 
 	
-	// @ManyToOne
-	@JoinColumn(name = "category_id")
+	@Column(name = "category_id")
+    @Min(0)
 	private int category_id;
 
 	@Column(name = "details")

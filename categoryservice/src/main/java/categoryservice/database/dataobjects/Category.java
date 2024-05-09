@@ -2,6 +2,9 @@ package categoryservice.database.dataobjects;
 
 import jakarta.persistence.*;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Min;
+
 /**
  * This class contains details about categories.
  */
@@ -9,11 +12,13 @@ import jakarta.persistence.*;
 @Table(name = "category")
 public class Category implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    @Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
 	private int id;
+
+    @Column(name = "name", nullable = false)
+    @NotBlank
 	private String name;
 
 	public Category() {
@@ -23,9 +28,6 @@ public class Category implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false)
 	public int getId() {
 		return this.id;
 	}
@@ -34,7 +36,6 @@ public class Category implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "name", nullable = false)
 	public String getName() {
 		return this.name;
 	}

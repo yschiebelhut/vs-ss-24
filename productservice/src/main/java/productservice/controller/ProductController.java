@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import productservice.handler.ProductHandler;
 import productservice.model.Product;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -37,7 +39,7 @@ public class ProductController {
     }
 
     @PostMapping(value = "add-product")
-    public ResponseEntity<Integer> addProduct(@RequestBody Product product) {
+    public ResponseEntity<Integer> addProduct(@Valid @RequestBody Product product) {
         return new ResponseEntity<>(productHandler.addProduct(product), HttpStatus.OK);
     }
 

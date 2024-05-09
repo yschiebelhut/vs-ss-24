@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Locale;
 
+import jakarta.validation.Valid;
+
+
 @RestController
 @RequestMapping(value = "/category/")
 public class CategoryController {
@@ -34,7 +37,7 @@ public class CategoryController {
     }
 
     @PostMapping(value = "add-category")
-    public ResponseEntity<Boolean> addCategory(@RequestBody Category category) {
+    public ResponseEntity<Boolean> addCategory(@Valid @RequestBody Category category) {
         return new ResponseEntity<>(categoryHandler.addCategory(category), HttpStatus.OK);
     }
 
