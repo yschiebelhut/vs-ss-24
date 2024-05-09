@@ -37,22 +37,15 @@ public class CategoryController {
     }
 
     @PostMapping(value = "add-category")
-    public ResponseEntity<Boolean> addCategory(@Valid @RequestBody Category category) {
-        return new ResponseEntity<>(categoryHandler.addCategory(category), HttpStatus.OK);
+    @ResponseStatus(value = HttpStatus.OK)
+    public void addCategory(@Valid @RequestBody Category category) {
+        categoryHandler.addCategory(category);
     }
-
-//    @DeleteMapping(value = "delete-category/{cat}")
-//    public ResponseEntity<Boolean> deleteCategory(@PathVariable Category cat) {
-//        return new ResponseEntity<>(categoryHandler.delCategory(cat), HttpStatus.OK);
-//    }
 
     @DeleteMapping(value = "delete-category/{id}")
-    public ResponseEntity<Boolean> deleteCategoryById(@PathVariable Integer id) {
-        return new ResponseEntity<>(categoryHandler.deleteCategoryById(id), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "exists-category/{id}")
-    public ResponseEntity<Boolean> existsCategory(@PathVariable Integer id) {
-        return new ResponseEntity<>(categoryHandler.getCategory(id) != null, HttpStatus.OK);
+    @ResponseStatus(value = HttpStatus.OK)
+    public void deleteCategoryById(@PathVariable Integer id) {
+        categoryHandler.getCategory(id);
+        categoryHandler.deleteCategoryById(id);
     }
 }

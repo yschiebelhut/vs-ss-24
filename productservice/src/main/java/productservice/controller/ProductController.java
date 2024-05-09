@@ -44,12 +44,15 @@ public class ProductController {
     }
 
     @DeleteMapping(value = "delete-product/{id}")
-    public ResponseEntity<Boolean> deleteProduct(@PathVariable Integer id) {
-        return new ResponseEntity<>(productHandler.deleteProduct(id), HttpStatus.OK);
+    @ResponseStatus(value = HttpStatus.OK)
+    public void deleteProduct(@PathVariable Integer id) {
+        productHandler.getProductById(id);
+        productHandler.deleteProduct(id);
     }
 
     @DeleteMapping(value = "delete-product-by-category/{id}")
-    public ResponseEntity<Boolean> deleteProductByCategory(@PathVariable Integer id) {
-        return new ResponseEntity<>(productHandler.deleteProductByCategory(id), HttpStatus.OK);
+    @ResponseStatus(value = HttpStatus.OK)
+    public void deleteProductByCategory(@PathVariable Integer id) {
+        productHandler.deleteProductByCategory(id);
     }
 }

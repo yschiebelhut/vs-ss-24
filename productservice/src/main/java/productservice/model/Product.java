@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.DecimalMin;
 
 /**
  * This class contains details about products.
@@ -27,12 +28,12 @@ public class Product implements java.io.Serializable {
 	private String name;
 
 	@Column(name = "price")
-    @Min(0)
+    @DecimalMin(value = "0", inclusive = false)
 	private double price;
 
 	
 	@Column(name = "category_id")
-    @Min(0)
+    @Min(1)
 	private int category_id;
 
 	@Column(name = "details")

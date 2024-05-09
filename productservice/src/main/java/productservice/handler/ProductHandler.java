@@ -2,6 +2,8 @@ package productservice.handler;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import productservice.model.Product;
 import productservice.model.ProductDAO;
 
@@ -27,14 +29,12 @@ public class ProductHandler {
     }
 
     public Integer addProduct(Product product) {
-        // Todo: Validation Category
-        if (validateCategory(product.getCategory())) {
-            Product newProduct = new Product(product);
-            productDAO.saveObject(newProduct);
-            log("Added Product " + product.getName() + " with id " + product.getId());
-            return product.getId();
-        }
-        return -1;
+        validateCategory(product.getCategory());
+
+        Product newProduct = new Product(product);
+        productDAO.saveObject(newProduct);
+        log("Added Product " + product.getName() + " with id " + product.getId());
+        return product.getId();
     }
 
     public Boolean deleteProduct(Integer id) {
@@ -58,7 +58,7 @@ public class ProductHandler {
         return new ProductDAO().getProductListByCriteria(searchDescription, searchMinPrice, searchMaxPrice);
     }
 
-    public Boolean deleteProductByCategory(Integer categoryId) {
+    public void deleteProductByCategory(Integer categoryId) {
         log("Deleting all Products with category " + categoryId);
         List<Product> allProducts = getAllProducts();
         for (Product product : allProducts) {
@@ -67,21 +67,23 @@ public class ProductHandler {
                 log("Deleting Product " + product.getId());
             }
         }
-
-        return true;
     }
 
-    private Boolean validateCategory(Integer categoryId) {
+    private void validateCategory(Integer categoryId) {
         try {
-            Boolean isValid = webclient.get()
-                .uri("/exists-category/" + categoryId)
-                .retrieve().bodyToMono(Boolean.class).block();
-            log("Category " + categoryId + " is valid? " + isValid);
-            return isValid;
+            webclient.get()
+                .uri("/get-category/" + categoryId)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+            log("Category " + categoryId + " is valid");
         } catch (Exception e) {
             log("Category " + categoryId + " is invalid");
             System.out.println(e.getMessage());
-            return false;
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid Category ID" + categoryId
+            );
         }
     }
 }
