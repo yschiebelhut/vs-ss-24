@@ -16,9 +16,15 @@ spec:
         image: yschiebelhut/productservice:002
         env:
           - name: DB_USER
-            value: productservice
+            valueFrom:
+              configMapKeyRef:
+                name: productservice-db-config
+                key: MYSQL_USER
           - name: DB_PASS
-            value: 240b2c6d58ff2ce2f508b49f
+            valueFrom:
+              secretKeyRef:
+                name: productservice-db-secret
+                key: MYSQL_PASSWORD
           - name: CATEGORY_SERVICE
             value: "categoryservice-service.default.svc.cluster.local/category" # TODO:
           - name: DB_PATH
@@ -43,14 +49,26 @@ spec:
       - name: productservice-db
         image: yschiebelhut/productservice-db:002
         env:
-          - name: MYSQL_ROOT_PASSWORD
-            value: c8de110f37300a53a971749
           - name: MYSQL_DATABASE
-            value: productservice
+            valueFrom:
+              configMapKeyRef:
+                name: productservice-db-config
+                key: MYSQL_DATABASE
           - name: MYSQL_USER
-            value: productservice
+            valueFrom:
+              configMapKeyRef:
+                name: productservice-db-config
+                key: MYSQL_USER
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: productservice-db-secret
+                key: MYSQL_ROOT_PASSWORD
           - name: MYSQL_PASSWORD
-            value: 240b2c6d58ff2ce2f508b49f
+            valueFrom:
+              secretKeyRef:
+                name: productservice-db-secret
+                key: MYSQL_PASSWORD
         ports:
         - containerPort: 3306
 
@@ -97,9 +115,15 @@ spec:
         image: yschiebelhut/categoryservice:002
         env:
           - name: DB_USER
-            value: categoryservice
+            valueFrom:
+              configMapKeyRef:
+                name: categoryservice-db-config
+                key: MYSQL_USER
           - name: DB_PASS
-            value: 240b2c6d58ff2ce2f508b49f
+            valueFrom:
+              secretKeyRef:
+                name: categoryservice-db-secret
+                key: MYSQL_PASSWORD
           - name: PRODUCT_SERVICE
             value: "productservice-service.default.svc.cluster.local/product" # TODO:
           - name: DB_PATH
@@ -124,14 +148,26 @@ spec:
       - name: categoryservice-db
         image: yschiebelhut/categoryservice-db:002
         env:
-          - name: MYSQL_ROOT_PASSWORD
-            value: c8de110f37300a53a971749
           - name: MYSQL_DATABASE
-            value: categoryservice
+            valueFrom:
+              configMapKeyRef:
+                name: categoryservice-db-config
+                key: MYSQL_DATABASE
           - name: MYSQL_USER
-            value: categoryservice
+            valueFrom:
+              configMapKeyRef:
+                name: categoryservice-db-config
+                key: MYSQL_USER
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: categoryservice-db-secret
+                key: MYSQL_ROOT_PASSWORD
           - name: MYSQL_PASSWORD
-            value: 240b2c6d58ff2ce2f508b49f
+            valueFrom:
+              secretKeyRef:
+                name: categoryservice-db-secret
+                key: MYSQL_PASSWORD
         ports:
         - containerPort: 3306
 
@@ -157,3 +193,37 @@ spec:
   ports:
   - port: 3306
     targetPort: 3306
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: productservice-db-config
+data:
+  MYSQL_DATABASE: productservice
+  MYSQL_USER: productservice
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: productservice-db-secret
+data:
+  MYSQL_ROOT_PASSWORD: YzhkZTExMGYzNzMwMGE1M2E5NzE3NDkK # c8de110f37300a53a971749
+  MYSQL_PASSWORD: MjQwYjJjNmQ1OGZmMmNlMmY1MDhiNDlmCg== # 240b2c6d58ff2ce2f508b49f
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: categoryservice-db-config
+data:
+  MYSQL_DATABASE: categoryservice
+  MYSQL_USER: categoryservice
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: categoryservice-db-secret
+data:
+  MYSQL_ROOT_PASSWORD: YzhkZTExMGYzNzMwMGE1M2E5NzE3NDkK # c8de110f37300a53a971749
+  MYSQL_PASSWORD: MjQwYjJjNmQ1OGZmMmNlMmY1MDhiNDlmCg== # 240b2c6d58ff2ce2f508b49f
