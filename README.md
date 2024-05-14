@@ -26,4 +26,4 @@ Das nachfolgende Video demonstriert das LoadBalancing Feature von Kubernetes.
 Auf der rechten Seite sind 3 Terminal-Fenster zu sehen, die jeweils den Log einer der 3 Replicas des Categoryservice anzeigt.
 Wird nun von einem Client eine große Anzahl von Requests innerhalb einer kurzen Zeit gesendet, kann beobachtet werden, dass diese Anfragen auf die verschiedenen Replicas aufgeteilt werden.
 
-![Demonstration LoadBalancing](./LoadBalancing.mov)
+![Demonstration LoadBalancing](./LoadBalancing.gif)
