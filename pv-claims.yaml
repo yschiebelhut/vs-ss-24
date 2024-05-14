@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: categoryservice-pv-claim
+spec:
+  resources:
+    requests:
+      storage: 10Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: productservice-pv-claim
+spec:
+  resources:
+    requests:
+      storage: 10Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
