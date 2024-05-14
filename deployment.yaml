@@ -1,0 +1,159 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: productservice
+spec:
+  selector:
+    matchLabels:
+      app: productservice
+  template:
+    metadata:
+      labels:
+        app: productservice
+    spec:
+      containers:
+      - name: productservice
+        image: yschiebelhut/productservice:002
+        env:
+          - name: DB_USER
+            value: productservice
+          - name: DB_PASS
+            value: 240b2c6d58ff2ce2f508b49f
+          - name: CATEGORY_SERVICE
+            value: "categoryservice-service.default.svc.cluster.local/category" # TODO:
+          - name: DB_PATH
+            value: productservice-db-service.default.svc.cluster.local:3306/productservice # TODO:
+        ports:
+        - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: productservice-db
+spec:
+  selector:
+    matchLabels:
+      app: productservice-db
+  template:
+    metadata:
+      labels:
+        app: productservice-db
+    spec:
+      containers:
+      - name: productservice-db
+        image: yschiebelhut/productservice-db:002
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: c8de110f37300a53a971749
+          - name: MYSQL_DATABASE
+            value: productservice
+          - name: MYSQL_USER
+            value: productservice
+          - name: MYSQL_PASSWORD
+            value: 240b2c6d58ff2ce2f508b49f
+        ports:
+        - containerPort: 3306
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: productservice-service
+spec:
+  selector:
+    app: productservice
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: productservice-db-service
+spec:
+  selector:
+    app: productservice-db
+  ports:
+  - port: 3306
+    targetPort: 3306
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: categoryservice
+spec:
+  selector:
+    matchLabels:
+      app: categoryservice
+  template:
+    metadata:
+      labels:
+        app: categoryservice
+    spec:
+      containers:
+      - name: categoryservice
+        image: yschiebelhut/categoryservice:002
+        env:
+          - name: DB_USER
+            value: categoryservice
+          - name: DB_PASS
+            value: 240b2c6d58ff2ce2f508b49f
+          - name: PRODUCT_SERVICE
+            value: "productservice-service.default.svc.cluster.local/product" # TODO:
+          - name: DB_PATH
+            value: categoryservice-db-service.default.svc.cluster.local:3306/categoryservice # TODO:
+        ports:
+        - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: categoryservice-db
+spec:
+  selector:
+    matchLabels:
+      app: categoryservice-db
+  template:
+    metadata:
+      labels:
+        app: categoryservice-db
+    spec:
+      containers:
+      - name: categoryservice-db
+        image: yschiebelhut/categoryservice-db:002
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: c8de110f37300a53a971749
+          - name: MYSQL_DATABASE
+            value: categoryservice
+          - name: MYSQL_USER
+            value: categoryservice
+          - name: MYSQL_PASSWORD
+            value: 240b2c6d58ff2ce2f508b49f
+        ports:
+        - containerPort: 3306
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: categoryservice-service
+spec:
+  selector:
+    app: categoryservice
+  ports:
+  - port: 8080
+    targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: categoryservice-db-service
+spec:
+  selector:
+    app: categoryservice-db
+  ports:
+  - port: 3306
+    targetPort: 3306
