@@ -1,0 +1,119 @@
+.App {
+    max-width: 1024px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    all:  unset;
+    cursor: pointer;
+    background-color: black;
+    color: white;
+    padding: 10px;
+    margin: 10px;
+}
+
+button:disabled {
+    background-color: grey;
+}
+
+label {
+    font-style: italic;
+    padding-right: 10px;
+    min-width: 200px;
+}
+
+input {
+    border: none;
+    border-bottom: thin solid black;
+}
+
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: calc(100% - 40px);
+    height: 100%;
+    background-color: white;
+    padding: 20px;
+}
+
+.modal-header {
+    display: flex;
+    flex-direction: row;
+    line-height: 30px;
+    margin-bottom: 30px;
+}
+
+.modal-title {
+    flex-grow: 1;
+    font-size: 30px;
+}
+
+.modal-close {
+    cursor: pointer;
+}
+
+.spacer {
+    flex-grow: 1;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.products {
+    display: flex;
+    flex-direction: column;
+}
+
+.product {
+    margin: 10px;
+    border: thin solid black;
+    padding: 10px;
+}
+
+.product-header {
+    display: flex;
+    flex-direction: row;
+    line-height: 40px;
+}
+
+.product-category {
+    margin-left: 20px;
+    line-height: 25px;
+}
+
+.category {
+    padding: 0px 10px;
+
+    background-color: black;
+    color: white;
+    border-radius: 7px;
+}
+
+.category-delete {
+    padding: 0;
+}
+
+.product-name {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.product-price {
+    font-weight: bold;
+    padding-right: 10px;
+}
+
+.product-description {
+    padding-top: 20px;
+}
