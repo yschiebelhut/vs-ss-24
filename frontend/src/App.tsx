@@ -29,8 +29,8 @@ function service(url: string) {
     return { get, post, del };
 }
 
-const categoryService = service("https://category");
-const productService = service("https://category");
+const categoryService = service("/category");
+const productService = service("/product");
 
 interface Product {
     name: string;
