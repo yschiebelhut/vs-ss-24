@@ -14,6 +14,9 @@ function service(url: string) {
     async function post<T>(path: string, body: T) {
         const response = await fetch(url + path, {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(body)
         });
         if (!response.ok) throw new Error(`Failed to fetch`);
