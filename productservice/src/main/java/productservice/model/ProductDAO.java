@@ -68,13 +68,21 @@ public class ProductDAO extends GenericHibernateDAO<Product, Integer> {
         if (searchDescription != null && !searchDescription.isEmpty()) {
             query.where(builder.and(
                     builder.or(
-                    	builder.like(root.get("details"), "%" + searchDescription + "%"),
-                    	builder.like(root.get("name"), "%" + searchDescription + "%")
+                            builder.like(root.get("details"), "%" + searchDescription + "%"),
+                            builder.like(root.get("name"), "%" + searchDescription + "%")
                     ),
                     builder.between(root.get("price"), searchMinPrice, searchMaxPrice))
             );
 
-			System.out.println("Search query build: " + query);
+            System.out.println("Search query build: " + query);
+        } else {
+            if (searchMinPrice != null && searchMaxPrice != null) {
+                query.where(builder.between(root.get("price"), searchMinPrice, searchMaxPrice));
+            } else if (searchMinPrice != null) {
+                query.where(builder.ge(root.get("price"), searchMinPrice));
+            } else if (searchMaxPrice != null) {
+                query.where(builder.le(root.get("price"), searchMaxPrice));
+            }
         }
 //        if (searchMinPrice != null && searchMaxPrice != null) {
 //            query.where(builder.between(root.get("price"), searchMinPrice, searchMaxPrice));
