@@ -39,7 +39,7 @@ interface Product {
     name: string;
     price: number;
     description: string;
-    categoryId: number;
+    category: number;
 }
 
 interface Category {
@@ -75,7 +75,7 @@ function ProductUI({ product, refresh, categories }: { product: Product, refresh
         <div className="product-header">
             <div className="product-name">{product.name}</div>
             <div className="product-category">
-                <CategoryUI refresh={refresh} categoryId={product.categoryId} categories={categories} />
+                <CategoryUI refresh={refresh} categoryId={product.category} categories={categories} />
             </div>
             <div className="spacer" />
             <div className="product-price">{product.price} $</div>
@@ -101,7 +101,7 @@ function AddProduct({ refresh, categories }: { refresh: () => void, categories: 
             name,
             description,
             price: parseFloat(price),
-            categoryId
+            category: categoryId
         });
 
         window.alert("Product erfolgreich angelegt");
@@ -180,13 +180,8 @@ function App() {
   const [addProduct, setAddProduct] = useState(false);
   const [addCategory, setAddCategory] = useState(false);
   
-  const [products, setProducts] = useState<Product[]>([
-    { categoryId: 1, name: "Test", description: "Test test", price: 10 },
-    { categoryId: 1, name: "Test", description: "Test ", price: 10 }
-  ]);
-  const [categories, setCategories] = useState<Category[]>([
-    { id: 1, name: "Test" }
-  ]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
 
   async function refresh() {
