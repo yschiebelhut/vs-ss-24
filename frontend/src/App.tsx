@@ -36,6 +36,7 @@ const categoryService = service("/category");
 const productService = service("/product");
 
 interface Product {
+    id: number;
     name: string;
     price: number;
     description: string;
@@ -62,9 +63,11 @@ function Modal({ title, children, close }: React.PropsWithChildren<{ title: stri
 // -------------- Product UI ---------------
 
 function ProductUI({ product, refresh, categories }: { product: Product, refresh: () => void, categories: Category[] }) {
-    function deleteProduct() {
+    async function deleteProduct() {
         const confirmed = window.confirm(`Willst du wirklich ${product.name} löschen?`);
         if (!confirmed) return;
+
+        await productService.del(`/delete-product/${product.id}`);
 
         window.alert("Produkt gelöscht");
 
