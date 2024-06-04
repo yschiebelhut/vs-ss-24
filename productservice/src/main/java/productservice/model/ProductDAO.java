@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -62,21 +63,26 @@ public class ProductDAO extends GenericHibernateDAO<Product, Integer> {
         Root<Product> root = query.from(Product.class);
         query.select(root);
 
+        List<Predicate> filters = new ArrayList<>();
+
         if (searchDescription != null && !searchDescription.isEmpty()) {
-            query.where(builder.or(
-                    builder.like(root.get("details"), "%" + searchDescription + "%"),
-                    builder.like(root.get("name"), "%" + searchDescription + "%"))
+            query.where(builder.and(
+                    builder.or(
+                    	builder.like(root.get("details"), "%" + searchDescription + "%"),
+                    	builder.like(root.get("name"), "%" + searchDescription + "%")
+                    ),
+                    builder.between(root.get("price"), searchMinPrice, searchMaxPrice))
             );
 
 			System.out.println("Search query build: " + query);
         }
-        if (searchMinPrice != null && searchMaxPrice != null) {
-            query.where(builder.between(root.get("price"), searchMinPrice, searchMaxPrice));
-        } else if (searchMinPrice != null) {
-            query.where(builder.ge(root.get("price"), searchMinPrice));
-        } else if (searchMaxPrice != null) {
-            query.where(builder.le(root.get("price"), searchMaxPrice));
-        }
+//        if (searchMinPrice != null && searchMaxPrice != null) {
+//            query.where(builder.between(root.get("price"), searchMinPrice, searchMaxPrice));
+//        } else if (searchMinPrice != null) {
+//            query.where(builder.ge(root.get("price"), searchMinPrice));
+//        } else if (searchMaxPrice != null) {
+//            query.where(builder.le(root.get("price"), searchMaxPrice));
+//        }
 
         Query<Product> q = session.createQuery(query);
         productList = q.getResultList();
