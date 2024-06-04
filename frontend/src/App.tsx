@@ -39,7 +39,7 @@ interface Product {
     id: number;
     name: string;
     price: number;
-    description: string;
+    details: string;
     category: number;
 }
 
@@ -84,7 +84,7 @@ function ProductUI({ product, refresh, categories }: { product: Product, refresh
             <div className="product-price">{product.price} $</div>
         </div>
         <div className="product-description">
-            {product.description}
+            {product.details}
         </div>
 
         <div className="product-actions">
@@ -95,14 +95,14 @@ function ProductUI({ product, refresh, categories }: { product: Product, refresh
 
 function AddProduct({ refresh, categories }: { refresh: () => void, categories: Category[] }) {
     const [name, setName] = useState<string>("");
-    const [description, setDescription] = useState<string>("");
+    const [details, setDetails] = useState<string>("");
     const [price, setPrice] = useState<string>("");
     const [categoryId, setCategoryId] = useState<number>(0);
 
     async function addProduct() {
         await productService.post<Omit<Product, "id">>("/add-product", {
             name,
-            description,
+            details,
             price: parseFloat(price),
             category: categoryId
         });
@@ -112,7 +112,7 @@ function AddProduct({ refresh, categories }: { refresh: () => void, categories: 
     }
 
     const invalidPrice = (!!price && isNaN(parseFloat(price)));
-    const valid = name.length > 0 && description.length > 0 && price.length > 0 && !invalidPrice && categoryId !== 0;
+    const valid = name.length > 0 && details.length > 0 && price.length > 0 && !invalidPrice && categoryId !== 0;
     return <div className="column">
         <div className="row">
             <label>Name</label>
@@ -120,7 +120,7 @@ function AddProduct({ refresh, categories }: { refresh: () => void, categories: 
         </div>
         <div className="row">
             <label>Beschreibung</label>
-            <input value={description} onChange={e => setDescription(e.target.value)} />
+            <input value={details} onChange={e => setDetails(e.target.value)} />
         </div>
         <div className="row">
             <label>Preis</label>
@@ -186,7 +186,7 @@ function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
 
-  const [searchDescription, setSearchDescription] = useState("");
+  const [searchDetails, setSearchDetails] = useState("");
   const [searchMinPrice, setSearchMinPrice] = useState("");
   const [searchMaxPrice, setSearchMaxPrice] = useState("");
 
@@ -200,7 +200,7 @@ function App() {
     const minPrice = parseFloat(searchMinPrice) || 0;
     const maxPrice = parseFloat(searchMaxPrice) || 1_000_000;
 
-    const searchedProducts = await productService.get<Product[]>(`/get-product-by-search/${searchDescription}/${minPrice}/${maxPrice}`);
+    const searchedProducts = await productService.get<Product[]>(`/get-product-by-search/${searchDetails}/${minPrice}/${maxPrice}`);
     setProducts(searchedProducts);
   }
 
@@ -212,7 +212,7 @@ function App() {
         <h2>Produkte</h2>
 
         <div className="search">
-            <input placeholder="Suche" value={searchDescription} onChange={e => setSearchDescription(e.target.value)}/>
+            <input placeholder="Suche" value={searchDetails} onChange={e => setSearchDetails(e.target.value)}/>
             <input type="number" placeholder="Mindestpreis" value={searchMinPrice} onChange={e => setSearchMinPrice(e.target.value)} />
             <input type="number" placeholder="Maximalpreis" value={searchMaxPrice} onChange={e => setSearchMaxPrice(e.target.value)} />
             <button onClick={search}>Suchen</button>
