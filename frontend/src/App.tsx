@@ -197,8 +197,8 @@ function App() {
   }
 
   async function search() {
-    const minPrice = parseFloat(searchMinPrice) ?? 0;
-    const maxPrice = parseFloat(searchMaxPrice) ?? 1_000_000;
+    const minPrice = parseFloat(searchMinPrice) || 0;
+    const maxPrice = parseFloat(searchMaxPrice) || 1_000_000;
 
     const searchedProducts = await productService.get<Product[]>(`/get-product-by-search/${searchDescription}/${minPrice}/${maxPrice}`);
     setProducts(searchedProducts);
