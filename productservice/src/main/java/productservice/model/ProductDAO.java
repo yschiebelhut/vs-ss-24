@@ -12,7 +12,7 @@ import org.hibernate.query.Query;
 
 
 public class ProductDAO extends GenericHibernateDAO<Product, Integer> {
-	
+
 //	public List<Product> getProductListByCriteria(String searchDescription,
 //			Double searchMinPrice, Double searchMaxPrice){
 //
@@ -51,35 +51,42 @@ public class ProductDAO extends GenericHibernateDAO<Product, Integer> {
 //	    return productList;
 //	}
 
-	public List<Product> getProductListByCriteria(String searchDescription, Double searchMinPrice, Double searchMaxPrice) {
-		List<Product> productList = new ArrayList<>();
+    public List<Product> getProductListByCriteria(String searchDescription, Double searchMinPrice, Double searchMaxPrice) {
+        List<Product> productList = new ArrayList<>();
 
-		Session session = getSession();
+        Session session = getSession();
         session.beginTransaction();
 
-			CriteriaBuilder builder = session.getCriteriaBuilder();
-			CriteriaQuery<Product> query = builder.createQuery(Product.class);
-			Root<Product> root = query.from(Product.class);
-			query.select(root);
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Product> query = builder.createQuery(Product.class);
+        Root<Product> root = query.from(Product.class);
+        query.select(root);
 
-			if (searchDescription != null && !searchDescription.isEmpty()) {
-				query.where(builder.like(root.get("details"), "%" + searchDescription + "%"));
-			}
-			if (searchMinPrice != null && searchMaxPrice != null) {
-				query.where(builder.between(root.get("price"), searchMinPrice, searchMaxPrice));
-			} else if (searchMinPrice != null) {
-				query.where(builder.ge(root.get("price"), searchMinPrice));
-			} else if (searchMaxPrice != null) {
-				query.where(builder.le(root.get("price"), searchMaxPrice));
-			}
+        if (searchDescription != null && !searchDescription.isEmpty()) {
+            query.where(builder.or(
+                    builder.like(root.get("details"), "%" + searchDescription + "%"),
+                    builder.like(root.get("name"), "%" + searchDescription + "%"))
+            );
 
-			Query<Product> q = session.createQuery(query);
-			productList = q.getResultList();
+			System.out.println("Search query build: " + query);
+        }
+        if (searchMinPrice != null && searchMaxPrice != null) {
+            query.where(builder.between(root.get("price"), searchMinPrice, searchMaxPrice));
+        } else if (searchMinPrice != null) {
+            query.where(builder.ge(root.get("price"), searchMinPrice));
+        } else if (searchMaxPrice != null) {
+            query.where(builder.le(root.get("price"), searchMaxPrice));
+        }
 
-			session.getTransaction().commit();
+        Query<Product> q = session.createQuery(query);
+        productList = q.getResultList();
 
-		return productList;
-	}
+        System.out.println("Product List after search: " + productList);
 
-	
+        session.getTransaction().commit();
+
+        return productList;
+    }
+
+
 }
