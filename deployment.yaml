@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: productservice
-        image: yschiebelhut/productservice:002
+        image: yschiebelhut/productservice:004
         env:
           - name: DB_USER
             valueFrom:
@@ -26,7 +26,7 @@ spec:
                 name: productservice-db-secret
                 key: MYSQL_PASSWORD
           - name: CATEGORY_SERVICE
-            value: "categoryservice-service.default.svc.cluster.local/category" # TODO:
+            value: "apache.default.svc.cluster.local/category" # TODO:
           - name: DB_PATH
             value: productservice-db-service.default.svc.cluster.local:3306/productservice # TODO:
         ports:
@@ -132,7 +132,7 @@ spec:
                 name: categoryservice-db-secret
                 key: MYSQL_PASSWORD
           - name: PRODUCT_SERVICE
-            value: "productservice-service.default.svc.cluster.local/product" # TODO:
+            value: "apache.default.svc.cluster.local/product" # TODO:
           - name: DB_PATH
             value: categoryservice-db-service.default.svc.cluster.local:3306/categoryservice # TODO:
         ports:
@@ -258,7 +258,7 @@ spec:
     spec:
       containers:
       - name: apache
-        image: yschiebelhut/vs-proxy:002
+        image: yschiebelhut/vs-proxy:009
         resources:
           limits:
             memory: "128Mi"
