@@ -186,10 +186,22 @@ function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
 
+  const [searchDescription, setSearchDescription] = useState("");
+  const [searchMinPrice, setSearchMinPrice] = useState("");
+  const [searchMaxPrice, setSearchMaxPrice] = useState("");
+
 
   async function refresh() {
     setProducts(await productService.get<Product[]>("/get-products"));
     setCategories(await categoryService.get<Category[]>("/get-categories"));
+  }
+
+  async function search() {
+    const minPrice = parseFloat(searchMinPrice) ?? 0;
+    const maxPrice = parseFloat(searchMaxPrice) ?? 1_000_000;
+
+    const searchedProducts = await productService.get<Product[]>(`/get-product-by-search/${searchDescription}/${minPrice}/${maxPrice}`);
+    setProducts(searchedProducts);
   }
 
   useEffect(() => { refresh(); }, []);
@@ -198,6 +210,14 @@ function App() {
     <div className="App">
         <h1>Webshop</h1>
         <h2>Produkte</h2>
+
+        <div className="search">
+            <input placeholder="Suche" value={searchDescription} onChange={e => setSearchDescription(e.target.value)}/>
+            <input type="number" placeholder="Mindestpreis" value={searchMinPrice} onChange={e => setSearchMinPrice(e.target.value)} />
+            <input type="number" placeholder="Maximalpreis" value={searchMaxPrice} onChange={e => setSearchMaxPrice(e.target.value)} />
+            <button onClick={search}>Suchen</button>
+        </div>
+        
         <div className="products">
             {products.map(product => <ProductUI categories={categories} refresh={refresh} product={product} />)}
         </div>
